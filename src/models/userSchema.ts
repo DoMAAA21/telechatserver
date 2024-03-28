@@ -7,6 +7,7 @@ const users = pgTable('users', {
     password: text('password').notNull(),
     fname: text('fname').notNull(),
     lname: text('lname').notNull(),
+    number: text('number').notNull(),
     active: boolean('active').notNull(),
     created_at: date('created_at').notNull(), 
     updated_at: date('updated_at').notNull(), 
