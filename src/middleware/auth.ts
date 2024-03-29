@@ -3,19 +3,7 @@ import jwt from 'jsonwebtoken';
 import db from '../database/db';
 import users from '../models/userSchema';
 import { eq } from 'drizzle-orm';
-
-interface User {
-    id: number;
-    username: string;
-    email: string;
-    password: string;
-    fname: string;
-    lname: string;
-    number: string;
-    active: boolean;
-    created_at: Date | string;
-    updated_at: Date | string;
-}
+import type { User } from '../models/userSchema';
 
 interface CustomRequest extends Request {
     user?: User;
