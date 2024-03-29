@@ -12,6 +12,7 @@ const sendToken = (user: User, statusCode: number, res: Response): void => {
     const token: string = jwt.sign({ id: user.id, name: user.fname }, jwtSecret, {
         expiresIn: process.env.JWT_EXPIRES_TIME
     });
+    
     const options = {
         expires: new Date(
             Date.now() + 7 * 24 * 60 * 60 * 1000
