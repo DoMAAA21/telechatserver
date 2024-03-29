@@ -10,7 +10,7 @@ const users = pgTable('users', {
     fname: text('fname').notNull(),
     lname: text('lname').notNull(),
     number: text('number').notNull(),
-    active: boolean('active').notNull(),
+    active: boolean('active').notNull().default(false),
     created_at: date('created_at').notNull(), 
     updated_at: date('updated_at').notNull(), 
 })
