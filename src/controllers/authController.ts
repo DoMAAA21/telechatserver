@@ -3,6 +3,10 @@ import db from '../database/db';
 import users from '../models/userSchema';
 import { eq } from 'drizzle-orm';
 import bcrypt from 'bcrypt';
+import sendToken from '../utils/sendToken';
+import { compare } from 'bcrypt';
+
+
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
     try {
         const allUsers = await db.select().from(users);
@@ -14,6 +18,31 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
 }
 
 
+export const loginUser = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { email, password } = req.body;
+        const user = await db.select().from(users).where(eq(users.email, email));
+        if (!user || user.length === 0) {
+            res.status(404).json({ message: 'User not found' });
+            return;
+        }
+        const passwordMatch = await compare(password, user[0].password);
+
+        if (!passwordMatch) {
+            res.status(401).json({ message: 'Invalid password' });
+            return;
+        }
+        sendToken(user[0], res);
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(`Error user login: ${error.message}`);
+            res.status(500).json({ message: 'Internal server error' });
+        } else {
+            console.error(`Error registering user: ${error}`);
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+}
 
 
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
@@ -44,7 +73,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
             password: hashedPassword
         }
         const newUser = await db.insert(users).values(newUserData).returning();
-        res.json({ success: true, user: newUser });
+        sendToken(newUser[0], res);
     } catch (error) {
         if (error instanceof Error) {
             console.error(`Error registering user: ${error.message}`);
