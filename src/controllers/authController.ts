@@ -19,7 +19,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
         const { email } = req.body;
         const existingUser = await db.select().from(users).where(eq(users.email, email));
 
-        if (existingUser.length > 1) {
+        if (existingUser.length >= 1) {
             res.status(400).json({ error: 'User with this email already exists' });
             return;
         }
