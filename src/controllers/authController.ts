@@ -68,7 +68,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUserData ={
+        const newUserData = {
             ...req.body,
             password: hashedPassword
         }
@@ -81,6 +81,27 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
         } else {
             console.error(`Error registering user: ${error}`);
             res.status(500).json({ error: 'Internal server error' });
+        }
+    }
+}
+
+export const logout = async (req: Request, res: Response): Promise<void> => {
+    try {
+        res.cookie("token", null, {
+            expires: new Date(Date.now()),
+            httpOnly: true,
+        });
+        res.status(200).json({
+            success: true,
+            message: "Logged out",
+        });
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error(`Error user logout: ${error.message}`);
+            res.status(500).json({ message: 'Internal server error' });
+        } else {
+            console.error(`Error registering user: ${error}`);
+            res.status(500).json({ message: 'Internal server error' });
         }
     }
 }
