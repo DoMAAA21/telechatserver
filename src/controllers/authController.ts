@@ -2,10 +2,8 @@ import { Request, Response } from 'express';
 import db from '../database/db';
 import users from '../models/userSchema';
 import { eq } from 'drizzle-orm';
-import bcrypt from 'bcrypt';
+import bcrypt, { compare } from 'bcrypt';
 import sendToken from '../utils/sendToken';
-import { compare } from 'bcrypt';
-
 
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
     try {
